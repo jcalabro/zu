@@ -1,0 +1,10 @@
+services:
+    docs:
+        image: jcalabro/zoo-docs:2025-03-24
+        restart: always
+        ports:
+            - "8002:8080"
+        volumes:
+            - .:/srv
+        working_dir: "/srv/zig-out/docs"
+        command: quickserve --tls=false --interface=0.0.0.0
