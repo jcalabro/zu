@@ -1,3 +1,5 @@
+//! A simple data structure used to do thread-safe string interning
+
 const std = @import("std");
 const Allocator = mem.Allocator;
 const ArenaAllocator = std.heap.ArenaAllocator;

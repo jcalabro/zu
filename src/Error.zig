@@ -1,3 +1,5 @@
+//! `Error` carries additional user-friendly error messages that can provide more context on why a particular operation failed.
+
 // @REF: https://github.com/ziglang/zig/issues/2647
 
 const std = @import("std");

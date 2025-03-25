@@ -5,6 +5,9 @@ const Thread = std.Thread;
 const ThreadSafeAllocator = std.heap.ThreadSafeAllocator;
 const t = std.testing;
 
+/// A simple thread-safe Queue. The queue does not assume ownership over memory of
+/// its items, so for instance if you're using a `Queue([]const u8)`, be sure to
+/// free each slice.
 pub fn Queue(comptime T: anytype) type {
     const Options = struct {
         /// The amount of time to wait on a dequeue operation before

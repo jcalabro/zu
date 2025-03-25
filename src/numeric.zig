@@ -1,6 +1,7 @@
 const std = @import("std");
 const t = std.testing;
 
+/// Defines a unique numeric type that can be used in place of primitive types
 pub fn Numeric(comptime T: type) type {
     return enum(T) {
         const Self = @This();

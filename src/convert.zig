@@ -1,3 +1,5 @@
+//! Handles conversion of enum and optional types safely
+
 const std = @import("std");
 const t = std.testing;
 
@@ -45,7 +47,7 @@ test "enumFromInt" {
     );
 }
 
-/// Returns the value contained in the optional, or an error otherwise
+/// Safely returns the value contained in the optional, or an error otherwise
 pub fn optional(comptime T: type, opt: ?T) error{UnexpectedOptional}!T {
     if (opt) |o| return o;
     return error.UnexpectedOptional;

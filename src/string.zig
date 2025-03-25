@@ -1,14 +1,14 @@
+//! Namespace containing various string utilities
+
 const std = @import("std");
 const Allocator = mem.Allocator;
-// const ArenaAllocator = std.heap.ArenaAllocator;
-// const AutoHashMapUnmanaged = std.AutoArrayHashMapUnmanaged;
 const mem = std.mem;
-// const Mutex = std.Thread.Mutex;
 const t = std.testing;
 
 const Numeric = @import("numeric.zig").Numeric;
 const slice = @import("slice.zig");
 
+/// Defines an alias for `[]const u8` that is both easier to read and easier to type
 pub const String = []const u8;
 
 /// Checks if two strings are equal
