@@ -18,7 +18,7 @@ Then, add this to your `build.zig`:
 
 ```zig
 const zoo = b.dependency("zoo", .{});
-durin.root_module.addImport("zoo", zoo.module("zoo"));
+my_library_or_exe.root_module.addImport("zoo", zoo.module("zoo"));
 ```
 
 <img src="https://github.com/user-attachments/assets/9df9e9fa-503e-4314-8a3d-ff8e0b1b5a35" alt="a couple zebras">
