@@ -5,6 +5,8 @@
 //! optimal programs; they exist to help the user write programs quickly and with
 //! minimal bugs.
 
+pub const DualArena = @import("DualArena.zig");
+
 pub const MainAllocator = @import("MainAllocator.zig");
 
 pub const Error = @import("Error.zig");
