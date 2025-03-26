@@ -44,7 +44,7 @@ pub fn set(
 
 /// Prints the error to stderr if an error is set, else is a noop. This is a convenience wrapper that's likely only appropriate for tests.
 pub fn printAndDeinit(self: *Self) void {
-    if (self.message) |m| std.debug.print("error: {s}", .{m});
+    if (self.message) |m| std.debug.print("error: {s}\n", .{m});
     self.deinit();
 }
 
