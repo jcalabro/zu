@@ -42,6 +42,12 @@ pub fn set(
     self.message = try std.fmt.allocPrint(self.alloc, msg, args);
 }
 
+/// Prints the error to stderr if an error is set, else is a noop. This is a convenience wrapper that's likely only appropriate for tests.
+pub fn printAndDeinit(self: *Self) void {
+    if (self.message) |m| std.debug.print("error: {s}", .{m});
+    self.deinit();
+}
+
 test "Error" {
     const S = struct {
         fn check(alloc: Allocator) Allocator.Error!void {
