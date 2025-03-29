@@ -42,6 +42,17 @@ pub fn set(
     self.message = try std.fmt.allocPrint(self.alloc, msg, args);
 }
 
+/// Formats the `Error` in to a string
+pub fn format(
+    self: Self,
+    comptime fmt: []const u8,
+    _: std.fmt.FormatOptions,
+    writer: anytype,
+) !void {
+    const msg = if (self.message) |m| m else "(none)";
+    _ = try writer.print("{" ++ fmt ++ "}", .{msg});
+}
+
 /// Prints the error to stderr if an error is set, else is a noop. This is a convenience wrapper that's likely only appropriate for tests.
 pub fn printAndDeinit(self: *Self) void {
     if (self.message) |m| std.debug.print("error: {s}\n", .{m});
@@ -60,4 +71,16 @@ test "Error" {
     };
 
     try t.checkAllAllocationFailures(t.allocator, S.check, .{});
+
+    {
+        const msg = try std.fmt.allocPrint(t.allocator, "{s} there!", .{"hi"});
+        defer t.allocator.free(msg);
+        try t.expectEqualSlices(u8, "hi there!", msg);
+    }
+
+    {
+        const msg = try std.fmt.allocPrint(t.allocator, "{any} there!", .{"hi"});
+        defer t.allocator.free(msg);
+        try t.expectEqualSlices(u8, "{ 104, 105 } there!", msg);
+    }
 }
