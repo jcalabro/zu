@@ -72,15 +72,17 @@ test "Error" {
 
     try t.checkAllAllocationFailures(t.allocator, S.check, .{});
 
-    {
-        const msg = try std.fmt.allocPrint(t.allocator, "{s} there!", .{"hi"});
-        defer t.allocator.free(msg);
-        try t.expectEqualSlices(u8, "hi there!", msg);
-    }
+    var err = Self.init(t.allocator);
+    defer err.deinit();
 
     {
-        const msg = try std.fmt.allocPrint(t.allocator, "{any} there!", .{"hi"});
+        const msg = try std.fmt.allocPrint(t.allocator, "msg: {s}!", .{err});
         defer t.allocator.free(msg);
-        try t.expectEqualSlices(u8, "{ 104, 105 } there!", msg);
+        try t.expectEqualSlices(u8, "msg: (none)!", msg);
     }
+
+    try err.set("hi", .{});
+    const msg = try std.fmt.allocPrint(t.allocator, "{s} there!", .{err});
+    defer t.allocator.free(msg);
+    try t.expectEqualSlices(u8, "hi there!", msg);
 }
