@@ -12,7 +12,7 @@ pub fn build(b: *std.Build) void {
 
     // Create a test step
     const zoo_tests = b.addTest(.{
-        .name = "zoo-tests",
+        .name = "zoo",
         .root_module = zoo_module,
     });
     const run_zoo_tests = b.addRunArtifact(zoo_tests);
