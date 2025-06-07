@@ -1,4 +1,4 @@
-//! Zoo is a collection of small utilities that are useful for writing zig programs
+//! `zu` is a collection of small utilities that are useful for writing zig programs
 //! quickly.
 //!
 //! Very few (if any) of the data structures here are optimized for writing

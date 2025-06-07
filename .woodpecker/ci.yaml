@@ -8,18 +8,18 @@ steps:
       commands: |
           zigup run $(cat zig_version.txt) build --summary all -freference-trace -Drace || true
           zigup run $(cat zig_version.txt) build --summary all -freference-trace -Drace
-          ./zig-out/bin/zoo
+          ./zig-out/bin/zu
 
     - name: Build and Test (valgrind)
       image: jcalabro/zoo-docs:2025-03-24
       commands: |
           zigup run $(cat zig_version.txt) build --summary all -freference-trace -Doptimize=ReleaseSafe || true
           zigup run $(cat zig_version.txt) build --summary all -freference-trace -Doptimize=ReleaseSafe
-          valgrind --leak-check=full --error-exitcode=1 ./zig-out/bin/zoo
+          valgrind --leak-check=full --error-exitcode=1 ./zig-out/bin/zu
 
     - name: Build and Test (release)
       image: jcalabro/zoo-docs:2025-03-24
       commands: |
           zigup run $(cat zig_version.txt) build --summary all -freference-trace -Doptimize=ReleaseSafe || true
           zigup run $(cat zig_version.txt) build --summary all -freference-trace -Doptimize=ReleaseSafe
-          ./zig-out/bin/zoo
+          ./zig-out/bin/zu

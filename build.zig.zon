@@ -1,7 +1,7 @@
 .{
-    .name = .zoo,
+    .name = .zu,
     .version = "0.0.1",
-    .fingerprint = 0x994f3f35ea135345, // Changing this has security and trust implications.
+    .fingerprint = 0xb4660630dfa46fad,
     .minimum_zig_version = "0.14.0",
     .dependencies = .{},
     .paths = .{
