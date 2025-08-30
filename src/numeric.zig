@@ -102,13 +102,8 @@ pub fn Numeric(comptime T: type) type {
         }
 
         /// Formats the `Numeric` in to a string as a primitive
-        pub fn format(
-            self: Self,
-            comptime fmt: []const u8,
-            _: std.fmt.FormatOptions,
-            writer: anytype,
-        ) !void {
-            _ = try writer.print("{" ++ fmt ++ "}", .{self.int()});
+        pub fn format(self: Self, writer: *std.io.Writer) !void {
+            _ = try writer.print("{d}", .{self.int()});
         }
     };
 }
@@ -145,13 +140,11 @@ test "Numeric basic operations" {
 
 test "Numeric json operations" {
     const T = Numeric(u8);
-    const S = struct {
-        n: T,
-    };
+    const S = struct { n: T };
 
     const s = S{ .n = T.from(12) };
 
-    const json = try std.json.stringifyAlloc(t.allocator, s, .{});
+    const json = try std.json.Stringify.valueAlloc(t.allocator, s, .{});
     defer t.allocator.free(json);
     try t.expectEqualSlices(u8, "{\"n\":12}", json);
 
@@ -166,19 +159,15 @@ test "Numeric string formatting" {
     {
         // positive number
         const n = T.from(12);
-        const decimal = try std.fmt.allocPrint(t.allocator, "val: {d}", .{n});
+        const decimal = try std.fmt.allocPrint(t.allocator, "val: {f}", .{n});
         defer t.allocator.free(decimal);
         try t.expectEqualSlices(u8, "val: 12", decimal);
-
-        const hex = try std.fmt.allocPrint(t.allocator, "val: 0x{x}", .{n});
-        defer t.allocator.free(hex);
-        try t.expectEqualSlices(u8, "val: 0xc", hex);
     }
 
     {
         // negative number
         const n = T.from(-12);
-        const decimal = try std.fmt.allocPrint(t.allocator, "val: {d}", .{n});
+        const decimal = try std.fmt.allocPrint(t.allocator, "val: {f}", .{n});
         defer t.allocator.free(decimal);
         try t.expectEqualSlices(u8, "val: -12", decimal);
     }
