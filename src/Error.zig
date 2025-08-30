@@ -43,14 +43,9 @@ pub fn set(
 }
 
 /// Formats the `Error` in to a string
-pub fn format(
-    self: Self,
-    comptime fmt: []const u8,
-    _: std.fmt.FormatOptions,
-    writer: anytype,
-) !void {
+pub fn format(self: @This(), writer: *std.io.Writer) !void {
     const msg = if (self.message) |m| m else "(none)";
-    _ = try writer.print("{" ++ fmt ++ "}", .{msg});
+    _ = try writer.print("{s}", .{msg});
 }
 
 /// Prints the error to stderr if an error is set, else is a noop. This is a convenience wrapper that's likely only appropriate for tests.
@@ -76,13 +71,13 @@ test "Error" {
     defer err.deinit();
 
     {
-        const msg = try std.fmt.allocPrint(t.allocator, "msg: {s}!", .{err});
+        const msg = try std.fmt.allocPrint(t.allocator, "msg: {f}!", .{err});
         defer t.allocator.free(msg);
         try t.expectEqualSlices(u8, "msg: (none)!", msg);
     }
 
     try err.set("hi", .{});
-    const msg = try std.fmt.allocPrint(t.allocator, "{s} there!", .{err});
+    const msg = try std.fmt.allocPrint(t.allocator, "{f} there!", .{err});
     defer t.allocator.free(msg);
     try t.expectEqualSlices(u8, "hi there!", msg);
 }
