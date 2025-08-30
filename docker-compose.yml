@@ -1,6 +1,6 @@
 services:
     docs:
-        image: jcalabro/zoo-docs:2025-03-24
+        image: jcalabro/zu-docs:2025-03-24
         restart: always
         ports:
             - "8002:8080"
