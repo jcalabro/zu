@@ -100,6 +100,11 @@ pub fn Numeric(comptime T: type) type {
         pub fn jsonStringify(self: *const Self, jw: anytype) !void {
             try jw.write(self.int());
         }
+
+        /// Formats the `Numeric` in to a string as a primitive
+        pub fn format(self: Self, writer: *std.io.Writer) !void {
+            _ = try writer.print("{d}", .{self.int()});
+        }
     };
 }
 
@@ -146,4 +151,24 @@ test "Numeric json operations" {
     const res = try std.json.parseFromSlice(S, t.allocator, json, .{});
     defer res.deinit();
     try t.expectEqual(s, res.value);
+}
+
+test "Numeric string formatting" {
+    const T = Numeric(i8);
+
+    {
+        // positive number
+        const n = T.from(12);
+        const decimal = try std.fmt.allocPrint(t.allocator, "val: {f}", .{n});
+        defer t.allocator.free(decimal);
+        try t.expectEqualSlices(u8, "val: 12", decimal);
+    }
+
+    {
+        // negative number
+        const n = T.from(-12);
+        const decimal = try std.fmt.allocPrint(t.allocator, "val: {f}", .{n});
+        defer t.allocator.free(decimal);
+        try t.expectEqualSlices(u8, "val: -12", decimal);
+    }
 }
