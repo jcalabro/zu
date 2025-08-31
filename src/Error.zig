@@ -33,17 +33,13 @@ pub fn clear(self: *Self) void {
 
 /// Foramts and sets the error message, free'ing and overwriting
 /// any existing value. Caller owns returned memory.
-pub fn set(
-    self: *Self,
-    comptime msg: []const u8,
-    args: anytype,
-) Allocator.Error!void {
+pub fn set(self: *Self, comptime msg: []const u8, args: anytype) Allocator.Error!void {
     self.clear();
     self.message = try std.fmt.allocPrint(self.alloc, msg, args);
 }
 
 /// Formats the `Error` in to a string
-pub fn format(self: @This(), writer: *std.io.Writer) !void {
+pub fn format(self: Self, writer: *std.io.Writer) !void {
     const msg = if (self.message) |m| m else "(none)";
     _ = try writer.print("{s}", .{msg});
 }
