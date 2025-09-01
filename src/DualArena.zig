@@ -1,6 +1,6 @@
 //! Implements the common pattern of creating a permanent arena as well as a scratch arena.
 //!
-//! The scratch arena is intended to be freed at the end of scope and the permanent arena is intended to be freed in the case of an error.
+//! The scratch arena is intended to be freed at the end of scope and the permanent arena is intended to be freed in the case of an error, then at a later point in time when the caller is done with the region.
 
 const std = @import("std");
 const Allocator = std.mem.Allocator;
@@ -16,9 +16,9 @@ scratch: Allocator,
 scratch_arena: ArenaAllocator,
 
 /// Initializes the DualArena with a perm and scratch arena allocator
-pub inline fn init(alloc: Allocator) Allocator.Error!*Self {
+pub fn init(alloc: Allocator) Allocator.Error!*Self {
     const self = try alloc.create(Self);
-    errdefer alloc.destroy(self);
+    errdefer comptime unreachable;
 
     self.* = .{
         .perm = undefined,
@@ -41,12 +41,12 @@ pub fn deinit(self: *Self, alloc: Allocator) void {
 }
 
 /// Frees any data allocated in the permanent arena
-pub fn freePerm(self: *Self) void {
+pub fn resetPerm(self: *Self) void {
     _ = self.perm_arena.reset(.free_all);
 }
 
 /// Frees any data allocated in the scratch arena
-pub fn freeScratch(self: *Self) void {
+pub fn resetScratch(self: *Self) void {
     _ = self.scratch_arena.reset(.free_all);
 }
 
@@ -55,8 +55,8 @@ test "DualArena" {
 
     const S = struct {
         fn check(arenas: *Self) Allocator.Error!*u32 {
-            errdefer arenas.freePerm();
-            defer arenas.freeScratch();
+            errdefer arenas.resetPerm();
+            defer arenas.resetScratch();
 
             _ = try arenas.scratch.create(u32);
 

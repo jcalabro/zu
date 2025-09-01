@@ -22,14 +22,14 @@ map: AutoHashMapUnmanaged(string.Hash, String) = .{},
 /// Initializes a `StringPool` for use
 pub fn init(alloc: Allocator) Allocator.Error!*Self {
     const arena = try alloc.create(ArenaAllocator);
+    errdefer alloc.destroy(arena);
+
     arena.* = ArenaAllocator.init(alloc);
-    errdefer {
-        arena.deinit();
-        alloc.destroy(arena);
-    }
+    errdefer arena.deinit();
 
     const self = try alloc.create(Self);
-    errdefer alloc.destroy(self);
+    errdefer comptime unreachable;
+
     self.* = .{
         .arena = arena,
         .alloc = arena.allocator(),
