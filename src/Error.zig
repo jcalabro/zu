@@ -3,6 +3,7 @@
 // @REF: https://github.com/ziglang/zig/issues/2647
 
 const std = @import("std");
+const builtin = @import("builtin");
 const Allocator = std.mem.Allocator;
 const t = std.testing;
 
@@ -34,6 +35,7 @@ pub fn clear(self: *Self) void {
 /// Foramts and sets the error message, free'ing and overwriting
 /// any existing value. Caller owns returned memory.
 pub fn set(self: *Self, comptime msg: []const u8, args: anytype) Allocator.Error!void {
+    @branchHint(.cold);
     self.clear();
     self.message = try std.fmt.allocPrint(self.alloc, msg, args);
 }
@@ -44,8 +46,10 @@ pub fn format(self: Self, writer: *std.io.Writer) !void {
     _ = try writer.print("{s}", .{msg});
 }
 
-/// Prints the error to stderr if an error is set, else is a noop. This is a convenience wrapper that's likely only appropriate for tests.
+/// Prints the error to stderr if an error is set, else is a noop. This is a convenience wrapper that's only appropriate for tests.
 pub fn printAndDeinit(self: *Self) void {
+    if (comptime !builtin.is_test) @compileError("printAndDeinit should only be used in tests");
+
     if (self.message) |m| std.debug.print("error: {s}\n", .{m});
     self.deinit();
 }
